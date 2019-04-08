@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load blog_tags %}
+{% load staticfiles %}
+{% block head %}
+    {{ block.super }}
+{% endblock %}
+
+{% block body %}
+
+    {% if not post_list %}
+<br>
+    <div class="widget" id="aside" style="display: block;text-align: center" >
+    <div class="col-md-3 col-md-offset-2">
+        <div class="widget-title-banner" ><h2>技术类博客归档</h2></div>
+
+    {% archives as date_list %}
+        <ul class="posts">
+    {% for date in date_list %}
+<li class="post">
+
+  <a href="{% url 'archives' date.year date.month %}" class="tm-gray-text">
+    {{ date.year }} 年 {{ date.month }} 月
+{#      <ul class="posts">#}
+{##}
+{#          <li>#}
+{##}
+{#          </li>#}
+{#      </ul>#}
+  </a>
+        </li>
+
+
+{% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-3 col-md-offset-2">
+        <div class="widget-title-banner" ><h2>想法/散文归档</h2></div>
+
+
+          {% essay_archives as date_list %}
+    <ul class="posts">
+    {% for date in date_list %}
+        <li class="post">
+          <a href="{% url 'essay_archives' date.year date.month %}" class="tm-gray-text">
+    {{ date.year }} 年 {{ date.month }} 月
+{#      <ul class="posts">#}
+{##}
+{#          <li>#}
+{##}
+{#          </li>#}
+{#      </ul>#}
+  </a></li>
+
+        {% endfor %}
+            </ul>
+    </div>
+
+    </div>
+
+        <div class="col-md-2 col-md-offset-5 col-lg-2 col-lg-offset-5 col-xl-2 col-xl-offset-5 col-sm-10 col-xs-10 " style="text-align: center">
+        <div id="aside" class="widget">
+ <div class="widget-title-tag"><h2>&nbsp;&nbsp;&nbsp;&nbsp;标签</h2></div>
+        <br>
+    {% get_tags as tags %}
+
+    {% for tag in tags %}
+   <a href="{% url 'tag' tag.name %}" 
+             {% get_tags_times tag  as a %} style="color:{% randomcolor %};font-size: {% randomsize %}; margin: 0.5rem;">
+{#           {% if a <= 1 %}#}
+{#        style="font-size: 0.8rem;color: {% randomcolor  %}; margin: 20px;"#}
+{#   {% elif a <= 2 %}#}
+{#        style="font-size: 1.2rem; color: {% randomcolor  %}; margin: 20px;"#}
+{#   {% elif a <= 4 %}#}
+{#        style="font-size: 1.6rem;color: {% randomcolor  %}; margin: 20px; "#}
+{#   {% elif a <= 6 %}#}
+{#        style="font-size: 2.0rem; color: {% randomcolor  %}; margin: 20px;"#}
+{#   {% elif a <= 10 %}#}
+{#        style="font-size: 2.4rem;color: {% randomcolor  %};  margin: 20px;"#}
+{#   {% else %}#}
+{#        style="font-size: 2.8rem;color: {% randomcolor  %}; margin: 20px;"#}
+{#   {% endif %}>#}
+        {{ tag.name }}
+
+
+{#      <ul class="posts">#}
+{##}
+{#          <li>#}
+{##}
+{#          </li>#}
+{#      </ul>#}
+  </a>
+
+    {% endfor %}
+
+    </div>
+        </div>
+{% else %}
+            <div class="col-xs-10 col-xs-offset-1 col-sm-10  col-sm-offset-1 col-md-6  col-md-offset-3 col-lg-6 col-lg-offset-3 col-xl-6 col-xl-offset-3">
+        <title class="widget-title"></title>
+        <ul class="posts1">
+{% for post in post_list %}
+  <li class="post">
+  <br>
+      <h3 style="font-weight: 700;color: black;">    &nbsp;  {{ post.title }}</h3>
+     <div class="information">
+        <span>   <img  class="tags" src="{% static "img/zuozhe.png" %}">&nbsp;{{ post.author }}</span>
+
+
+
+    <span>   <img  class="tags" src="{% static "img/shijian.png" %}">&nbsp;{{ post.created_time }}</span>
+     <span>  <img  class="tags" src="{% static "img/yueduliang.png" %}">&nbsp;{{ post.views }}人已阅读</span>
+   {% if post.post_comment_set.count %} <span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;{{ post.post_comment_set.count}}条评论</span>{% else %}<span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;0条评论</span>{% endif %}
+
+</div>
+  <br>
+                  {% if post.img %}
+      <img src="{{ post.img.url }}">
+      {% endif %}
+      <br>
+  {{ post.excerpt | linebreaksbr}}
+  <br>
+      <a href="{{ post.get_absolute_url }}"> <button class="btn">阅读全文</button></a>
+
+      </li>
+<hr>
+{% endfor %}
+
+  </ul>
+            </div>
+    {% endif %}
+{% endblock %}
+
+
+
+
+{% block footer %}
+{% endblock %}
+{% block script %}
+    {{  block.super }}
+{% endblock %}

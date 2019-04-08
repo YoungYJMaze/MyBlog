@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+
+  {{ block.super }}
+        <link rel="stylesheet" type="text/css" href="{% static  'css/markdown.css' %}">
+     <link rel="stylesheet" type="text/css" href="{% static  'css/pygments.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="markdown-here-wrapper">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-10  col-sm-offset-1 col-md-6  col-md-offset-3 col-lg-6 col-lg-offset-3 col-xl-6 col-xl-offset-3">
+
+    {% block title %}
+        <h2 class="tm-title" >   {{ post.title }}</h2>
+
+
+    {% endblock %}
+
+  <div class="information">
+        <span>   <img  class="tags" src="{% static "img/zuozhe.png" %}">&nbsp;{{ post.author }}</span>
+
+
+
+    <span>   <img  class="tags" src="{% static "img/shijian.png" %}">&nbsp;{{ post.created_time }}</span>
+     <span>  <img  class="tags" src="{% static "img/yueduliang.png" %}">&nbsp;{{ post.views }}人已阅读</span>
+   {% if post.post_comment_set.count %} <span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;{{ post.post_comment_set.count}}条评论</span>{% else %}<span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;0条评论</span>{% endif %}
+
+</div>
+
+<div  class="col-lg-6" style="display:block;margin-bottom:20px;height:100%;width:100%;vertical-align: middle;display:table-cell;text-align:center ;">
+             {% if post.img %}
+      <img  class="picture" src="{{ post.img.url }}">
+      {% endif %}
+</div>
+
+    {% block context %}
+        <div class="#" style="display: block; max-height: 100%;max-width: 100%;">
+
+    {{ post.body |safe }}
+        {% endblock %}
+
+        </div>
+    <br>
+    <hr>
+    <form action="{% url 'post_comment' post.id %}" method="post" class="form-group">
+  {% csrf_token %}
+  <div class="row">
+
+    <div class="col-md-4">
+      <label for="{{ form.name.id_for_label }}">名字：</label>
+      {{ form.name }}
+      {{ form.name.errors }}
+    </div>
+    <div class="col-md-4">
+      <label for="{{ form.email.id_for_label }}">邮箱：</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+    <div class="col-md-4">
+      <label for="{{ form.url.id_for_label }}">URL：</label>
+      {{ form.url }}
+      {{ form.url.errors }}
+    </div>
+
+
+
+      <br>
+    <div class="col-md-10" >
+              <label>评论：</label>
+
+      {{ form.text }}
+      {{ form.text.errors }}
+
+        <br>
+      <button type="submit" class="tm-btn tm-btn-gray text-uppercase">发表</button>
+    </div>
+  </div>    <!-- row -->
+</form>
+
+    <ul class="posts">
+  {% for comment in comment_list %}
+  <li class="post">
+  <br>
+              <div class="post-thumbnail">
+            <a href="#">
+{#                <img class="img-rounded profile-thumbnail" src="{{ comment.author.gravatar(size=40) }}">#}
+                  <img class="img-rounded profile-thumbnail" src="">
+            </a>
+        </div>
+    <div class="post-author">{{ comment.name }}</div>
+      <div class="post-footer">{{ comment.url }}</div>
+      <div class="post-footer">{{ comment.email }}</div>
+      <div class="post-date">{{ comment.created_time }}</div>
+    <div class="post-body">
+      {{ comment.text | safe }}
+    </div>
+  </li>
+  {% empty %}
+  暂无评论
+  {% endfor %}
+    <hr>
+</ul>
+    </div>
+    {%  if post.toc %}
+     <aside class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 tm-aside-r">
+     <br>
+         <br>
+      <div class="tm-aside-container">
+{#                            <h3 class="tm-gray-text tm-title tm-margin-t-small">#}
+{#                                目录#}
+{#                            </h3>#}
+          {{ post.toc |safe }}
+      </div>
+     </aside>
+        </div>
+
+    {% endif %}
+    </div>
+    </div>
+    {% block footer %}
+        {% endblock %}
+ {% endblock %}

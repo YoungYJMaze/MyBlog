@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ block.super }}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block body %}
+    <div class="tm-margin-t-small">
+<div class="Calendar">
+    <div id="idCalendarPre"><<</div>
+    <div id="idCalendarNext">>></div>
+    <span id="idCalendarYear">2019</span> 年<span id="idCalendarMonth">1</span>月
+    <hr class="cm-hr" style="margin: 0.5em;">
+    <table cellspacing="0">
+        <thead>
+        <tr>
+            <td>Sun</td>
+            <td>Mon</td>
+            <td>Tue</td>
+            <td>Wed</td>
+            <td>Thu</td>
+            <td>Fri</td>
+            <td>Sat</td>
+        </tr>
+        </thead>
+        <tbody id="idCalendar">
+        </tbody>
+    </table>
+</div>
+
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+
+
+{% block script %}
+    {{ block.super }}
+{% endblock %}

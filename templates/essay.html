@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load blog_tags %}
+{#{% import "_macros.html" as macros %}#}
+
+
+{% block head %}
+    {{ block.super }}
+{% endblock %}
+{% block header %}
+    {{ block.super }}
+{% endblock %}
+{% block body %}
+       {{ block.super }}
+
+
+        <div>
+{#            <img src="{% static  'img/tm-about-img.jpg' %} ">#}
+        </div>
+
+        <section class="tm-section">
+            <div class="container-fluid">
+                <div class="row">
+
+          <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-2 col-lg-6 col-lg-offset-2 col-xl-6 col-xl-offset-2">
+{% if year %}
+          <h1 class="tm-gold-text">
+              {{ year }}年{{ month }}月</h1>
+    {% endif %}
+        <ul class="posts1">
+{% for post in post_list %}
+  <li class="post">
+  <br>
+      <h3 style="font-weight: 700;color: black;">    &nbsp;  {{ post.title }}</h3>
+     <div class="information">
+        <span>   <img  class="tags" src="{% static "img/zuozhe.png" %}">&nbsp;{{ post.author }}</span>
+
+
+
+    <span>   <img  class="tags" src="{% static "img/shijian.png" %}">&nbsp;{{ post.created_time }}</span>
+     <span>  <img  class="tags" src="{% static "img/yueduliang.png" %}">&nbsp;{{ post.views }}人已阅读</span>
+   {% if post.post_comment_set.count %} <span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;{{ post.post_comment_set.count}}条评论</span>{% else %}<span>  <img  class="tags" src="{% static "img/pinglun.png" %}">&nbsp;0条评论</span>{% endif %}
+
+</div>
+  <br>
+      {% if post.img %}
+      <img src="{{ post.img.url }}">
+      {% endif %}
+      <br>
+  {{ post.excerpt | linebreaksbr}}
+<br>
+      <a href="{{ post.get_absolute_url }}"> <button class="btn">阅读全文</button></a>
+
+  </li>
+    <hr>
+
+{% empty %}
+  <div class="no-post">暂时还没有发布的文章！</div>
+{% endfor %}
+  </ul>
+
+{% if is_paginated %}
+<div class="pagination">
+  {% if first %}
+    <a href="?page=1">1</a>
+  {% endif %}
+  {% if left %}
+    {% if left_has_more %}
+        <span>...</span>
+    {% endif %}
+    {% for i in left %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endfor %}
+  {% endif %}
+  <a href="?page={{ page_obj.number }}" style="color:#708090;">{{ page_obj.number }}</a>
+  {% if right %}
+    {% for i in right %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endfor %}
+    {% if right_has_more %}
+        <span>...</span>
+    {% endif %}
+  {% endif %}
+  {% if last %}
+    <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+  {% endif %}
+</div>
+{% endif %}
+
+            </div>
+
+                 <aside class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 tm-aside-r">
+<div class="widget" id="aside">
+                             <form role="search" method="get" id="searchform" action="{% url 'search' %}">
+  <input type="search" name="search_key" placeholder="搜索" required class="form-control">
+
+    </form>
+                    </div>
+                        <div class="widget" id="aside">
+                            <h4 class="widget-title">
+                                最热文章
+                            </h4>
+                            <nav>
+                              {% get_recent_essays as recent_essays_lists %}
+
+                                <ul class="nav">
+                                    {% for essay in recent_essays_lists %}
+                                    <li>
+                                        <a href="{{ essay.get_absolute_url }}">{{ essay.title }}</a>
+                                    </li>
+                                        <hr>
+                                    {% empty %}
+                                    暂无归档！
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="widget" id="aside">
+                            <h4 class="widget-title">
+                                最新评论
+                            </h4>
+                            <nav>
+                              {% get_recent_essays_comments as recent_comment_lists %}
+
+                                <ul class="nav">
+                                    {% for comment in recent_comment_lists %}
+                                    <li>
+                                                                            <span class="comment_sender"> <strong> {{ comment.name }} </strong></span>
+
+                                        <span class="comment_date">  {{ comment.created_time }}</span>
+                                        <br>
+                                        <span> To: <a href="{{ comment.get_belong_essay.get_absolute_url}}">{{ comment.get_belong_essay.title }}</a></span>
+
+
+                                    <br>
+                                        <p style="font-size: 0.9rem">  {{ comment.text |truncatechars:54 |safe}}</p>
+                                    </li>
+                                             <hr>
+                                    {% empty %}
+                                    暂无归档！
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+
+                        </div>
+                        <div class="widget" id="aside">
+                            <h4 class="widget-title">
+                                归档
+                            </h4>
+                           <ul class="nav"> <nav>
+                           {% essay_archives as date_list %}
+                            {% for date in date_list %}
+<li>
+  <a href="{% url 'essay_archives' date.year date.month %}">
+    {{ date.year }} 年 {{ date.month }} 月
+  </a>
+</li>
+{% endfor %}
+                            </nav></ul>
+                            <hr class="tm-margin-t-small">
+                            {% include "calendar.html" %}
+
+                        </div>
+
+
+                    </aside>
+
+                </div>
+
+            </div>
+        </section>
+
+
+
+
+
+{% endblock %}
+
+{% block script %}
+{{ block.super }}
+{% endblock %}

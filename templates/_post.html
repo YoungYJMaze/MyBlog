@@ -1,0 +1,7 @@
+<ul class="posts">
+    {% for post in posts %}
+    <li class="post">
+       <div class="tm-gold-text"> <a class="tm-gold-text" href="{% url  'post'%}"> {{ post.title }}</a></div>
+    </li>
+    {% endfor %}
+</ul>
