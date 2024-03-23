@@ -1,5 +1,4 @@
-markdown
-复制
+
 # MyBlog
 
 这是一个使用 Python 和 Django 框架开发的个人博客网站项目。
